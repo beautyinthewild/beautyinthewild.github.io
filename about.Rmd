@@ -3,9 +3,22 @@ title: "Beauty in the Wild"
 subtitle: "- A quest for citizen science in the Atlantic Sea -"
 ---
 
+```{=html}
 <style>
+h1.title {
+  text-align: center;
+  font-weight: bold;
+}
+h3.subtitle {
+  text-align: center;
+  color: #666666;
+  margin-top: -5px;
+  margin-bottom: 30px;
+}
+</style>
+```
 
-h1.title, h3.subtitle { text-align: center; } h3.subtitle { color: #666666; margin-top: -5px; margin-bottom: 30px; }
+------------------------------------------------------------------------
 
 Beauty in the Wild is a resource hub for anyone interested in marine biology, marine conservation, and marine affairs. It is largely focused on sea turtle conservation and research in the Atlantic Sea. If you want to live and work on a tropical island, you’ve come to the right place!
 
