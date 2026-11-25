@@ -11,7 +11,7 @@
 
 
 
-<title>My Website</title>
+<title>index.knit</title>
 
 <script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -260,22 +260,618 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">My Website</h1>
 
 </div>
 
 
-<p>Hello, Website!</p>
-<p>For more information about simple R Markdown websites, please read
-the documentation at <a
-href="https://pkg.yihui.org/rmarkdown-book/rmarkdown-site.html"
-class="uri">https://pkg.yihui.org/rmarkdown-book/rmarkdown-site.html</a>.</p>
-<p>Please also note that simple R Markdown sites are <em>not</em> based
-on <strong>blogdown</strong>. They are probably good for websites with
-only a few Rmd documents. For larger-scale and more sophisticated
-websites (such as blogs), you may want to use <strong>blogdown</strong>
-instead: <a href="https://github.com/rstudio/blogdown"
-class="uri">https://github.com/rstudio/blogdown</a>.</p>
+<p>Artificial light at night (ALAN) from coastal development is
+increasingly illuminating night skies in sandy beach ecosystems, which
+serve as critical sea turtle habitats. This nocturnal brightness can
+disorient endangered sea turtle hatchlings and deter adult turtles from
+nesting, underlying habitat reduction. In the United States, lighting
+assessments, guidelines, and regulations are integrated into sea turtle
+management. However, these protections are absent in the wider Caribbean
+and the U.S. Virgin Islands where there is no publicly available,
+ground-truthed data on light pollution. This study used ground light
+metrics to quantify nighttime brightness across all sea turtle habitats
+in St. Croix, producing the first island‑wide lighting assessment for
+the territory. We used a Sky Quality Meter (SQM) and a lux meter to
+compare how each instrument captures distinct aspects of light
+pollution. Light measurements were analyzed across nesting beaches and
+geographic regions to characterize spatial patterns of ALAN. Sea turtle
+data was collected from partners to evaluate how green turtle and
+hawksbill densities relate to light pollution, to compare disorientation
+patterns across beaches, and to compare the number of disorientation
+reports across different coastal property types. Light pollution was
+highest on the West End and along the North Shore where nest
+disorientation and mortality frequently occur at the Department of
+Sports, Parks and Recreation (DSPR) beaches, beachfront condominiums,
+hotels, and resorts. Disorientation reports were highest at DSPR beaches
+and the lowest at beachfront single homes. Preliminary analysis showed
+that increased light pollution was associated with fewer hawksbill
+emergences, though overall emergence numbers remained highest on the
+West End. This study also identified ALAN‑free sites in both developed
+coastal areas and remote locations, as well as the darkest coastal
+refugia on the island. These findings provide the first baseline,
+island‑wide, ground‑truthed dataset of ALAN conditions in St. Croix to
+serve as the basis for future lighting mitigation plans and
+guidelines.</p>
+<pre class="r"><code>SQM_west &lt;-read.csv(&quot;SQM West End.csv&quot;)
+SQM_north &lt;-read.csv(&quot;SQM North Shore.csv&quot;)
+SQM_south &lt;-read.csv(&quot;SQM South Shore.csv&quot;)
+SQM_eemp &lt;-read.csv(&quot;SQM EEMP.csv&quot;)</code></pre>
+<p>Visualize your data before coding. Review variables. Examples shown
+below.</p>
+<ul>
+<li><code>view(SQM_west)</code></li>
+<li><code>glimpse(SQM_west)</code></li>
+<li><code>head(SQM_west)</code></li>
+<li><code>tail(SQM_west)</code></li>
+</ul>
+<pre class="r"><code>view(SQM_west)
+glimpse(SQM_west)</code></pre>
+<pre><code>## Rows: 126
+## Columns: 28
+## $ YEAR              &lt;int&gt; 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026…
+## $ MONTH             &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5…
+## $ DAY               &lt;int&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16…
+## $ DATE              &lt;chr&gt; &quot;5/15/2026&quot;, &quot;5/15/2026&quot;, &quot;5/15/2026&quot;, &quot;5/15/2026&quot;, &quot;5/15/…
+## $ ISLAND            &lt;chr&gt; &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;STX&quot;, &quot;S…
+## $ LOCATION          &lt;chr&gt; &quot;SPNWR West &quot;, &quot;SPNWR West &quot;, &quot;SPNWR West &quot;, &quot;SPNWR West &quot;…
+## $ STANDARD.NAME     &lt;chr&gt; &quot;SPNWR West &quot;, &quot;SPNWR West &quot;, &quot;SPNWR West &quot;, &quot;SPNWR West &quot;…
+## $ LAT_DEGREES       &lt;chr&gt; &quot;17.67467&quot;, &quot;17.67511&quot;, &quot;17.67554&quot;, &quot;17.67594&quot;, &quot;17.6763&quot;,…
+## $ LON_DEGREES       &lt;dbl&gt; -64.90089, -64.90100, -64.90115, -64.90138, -64.90166, -64…
+## $ START.TIME        &lt;chr&gt; &quot;21:10&quot;, &quot;21:10&quot;, &quot;21:10&quot;, &quot;21:10&quot;, &quot;21:10&quot;, &quot;21:10&quot;, &quot;21:…
+## $ END.TIME          &lt;chr&gt; &quot;2:30&quot;, &quot;2:30&quot;, &quot;2:30&quot;, &quot;2:30&quot;, &quot;2:30&quot;, &quot;2:30&quot;, &quot;2:30&quot;, &quot;2…
+## $ WEATHER           &lt;chr&gt; &quot;Mostly Cloudy&quot;, &quot;Mostly Cloudy&quot;, &quot;Mostly Cloudy&quot;, &quot;Mostly…
+## $ CLOUD.COVER       &lt;chr&gt; &quot;60-80%&quot;, &quot;60-80%&quot;, &quot;60-80%&quot;, &quot;60-80%&quot;, &quot;60-80%&quot;, &quot;60-80%&quot;…
+## $ MOON.CONDITIONS   &lt;chr&gt; &quot;Crescent waning &quot;, &quot;Crescent waning &quot;, &quot;Crescent waning &quot;…
+## $ MOON.ILLUMINATION &lt;chr&gt; &quot;2.00%&quot;, &quot;2.00%&quot;, &quot;2.00%&quot;, &quot;2.00%&quot;, &quot;2.00%&quot;, &quot;2.00%&quot;, &quot;2.0…
+## $ POINTS            &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7…
+## $ RECORDERS         &lt;chr&gt; &quot;Romina and Sabrina&quot;, &quot;Romina and Sabrina&quot;, &quot;Romina and Sa…
+## $ SQM..LW.          &lt;dbl&gt; 18.97, 19.25, 19.41, 17.93, 18.11, 17.71, 18.63, 18.28, 18…
+## $ SQM..S.           &lt;dbl&gt; 20.93, 20.70, 21.02, 20.61, 20.22, 20.52, 20.03, 19.80, 19…
+## $ SQM..SW.          &lt;dbl&gt; 20.86, 20.96, 21.14, 20.81, 20.85, 20.85, 20.87, 20.58, 20…
+## $ SQM..N.           &lt;dbl&gt; 19.90, 20.87, 20.73, 20.39, 20.63, 20.52, 20.32, 20.35, 20…
+## $ SQM.ZENITH        &lt;dbl&gt; NA, 20.99, 20.95, 20.90, 20.92, 20.88, 20.25, 20.05, 18.97…
+## $ AVERAGE.SQM       &lt;dbl&gt; 20.17, 20.45, 20.58, 19.94, 19.95, 19.90, 19.96, 19.75, 19…
+## $ LUX.1             &lt;dbl&gt; 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00…
+## $ LUX.2             &lt;dbl&gt; 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00…
+## $ LUX.3             &lt;dbl&gt; 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00…
+## $ AVERAGE.LUX       &lt;dbl&gt; 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00…
+## $ Notes             &lt;chr&gt; &quot;Redid zenith measurement on 6/16/26. This first marker is…</code></pre>
+<p><strong>Secondary Datasets</strong></p>
+<p>Make a new data name for all CSV files. Tip: Type str(lw_west) in the
+console to make sure your data that you want to analyze is all numeric
+and not in character or else you have to convert it.</p>
+<pre class="r"><code>lw_west &lt;-SQM_west%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..LW.)%&gt;% 
+  mutate(REGION=&quot;West End&quot;)
+
+lw_north &lt;-SQM_north%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..LW.)%&gt;%
+  mutate(REGION=&quot;North Shore&quot;)
+
+lw_south &lt;-SQM_south%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..LW.)%&gt;%
+  mutate(REGION=&quot;South Shore&quot;)
+
+lw_eemp &lt;-SQM_eemp%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..LW.)%&gt;%
+  mutate(REGION=&quot;East End&quot;)</code></pre>
+<p>Combine the landward values from each data set, stack them
+together.</p>
+<pre class="r"><code>lw_stx &lt;-rbind(lw_west, lw_north, lw_south, lw_eemp) 
+
+lw_stx &lt;-lw_stx%&gt;%
+  filter(LOCATION!=&quot;&quot;)%&gt;% #removes blanks under location
+  drop_na()</code></pre>
+<p>Calculate SQM landward averages for each nesting beach. Take the
+average of all the points for each survey site.</p>
+<pre class="r"><code>stx_lw_analysis &lt;- lw_stx %&gt;%
+  mutate(SQM..LW. = as.numeric(SQM..LW.)) %&gt;%
+  group_by(LOCATION, REGION) %&gt;%
+  summarise(
+    points = max(POINTS, na.rm = TRUE),
+    lw_avg = mean(SQM..LW., na.rm = TRUE),
+    lw_median = median(SQM..LW., na.rm = TRUE),
+    lw_min = min(SQM..LW., na.rm = TRUE),
+    lw_max = max(SQM..LW., na.rm = TRUE),
+    lw_range = lw_max - lw_min,
+    lw_se = std.error(SQM..LW.),
+    STANDARD.NAME = first(STANDARD.NAME)
+  ) %&gt;%
+  ungroup()</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `SQM..LW. = as.numeric(SQM..LW.)`.
+## Caused by warning:
+## ! NAs introduced by coercion</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LOCATION&#39;. You can override using the `.groups`
+## argument.</code></pre>
+<pre class="r"><code>write.csv(stx_lw_analysis,&quot;SQM LW List of Beaches .csv&quot;)</code></pre>
+<p><strong>Top 10 Darkest Beaches in St. Croix</strong></p>
+<pre class="r"><code>lw_darkest &lt;-stx_lw_analysis%&gt;%
+  slice_max(order_by=lw_avg, n = 10) 
+
+write.csv(lw_darkest,&quot;LW Darkest Beaches.csv&quot;)</code></pre>
+<p><strong>Top 10 Brightest Beaches in St. Croix</strong></p>
+<pre class="r"><code>lw_brightest &lt;-stx_lw_analysis%&gt;%
+  slice_min(order_by=lw_avg, n=10)
+
+write.csv(lw_brightest,&quot;LW Brightest Beaches.csv&quot;)</code></pre>
+<p>Landward values for the West End</p>
+<pre class="r"><code>lw_boxplot&lt;-stx_lw_analysis%&gt;%
+  select(LOCATION, REGION, lw_avg, lw_median, lw_min, lw_max, lw_range)%&gt;%
+  filter(REGION == &quot;West End&quot;)</code></pre>
+<p>Scatter plot of nesting beaches in the West End.</p>
+<pre class="r"><code>ggplot(lw_boxplot, aes(x = reorder(LOCATION, -lw_avg), y = lw_avg, color = LOCATION)) + 
+  geom_point(color = &quot;black&quot;, size = 3.5) +
+  theme_bw() +
+  ylim(0, 25) + 
+  labs(
+    x = &quot;West End Beaches&quot;,
+    y = &quot;Landward Brightness (mag/arcsecs)&quot;
+  ) +
+  guides(fill = FALSE)+
+  theme( 
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.title.y = element_text(margin = margin(r = 10)))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" alt="" width="672" /></p>
+<p>Light Data for Zenith Skies</p>
+<pre class="r"><code>zenith_west &lt;-SQM_west%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM.ZENITH)%&gt;%
+  mutate(REGION=&quot;West End&quot;)
+
+zenith_north &lt;-SQM_north%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM.ZENITH)%&gt;% 
+  mutate(REGION=&quot;North Shore&quot;)
+
+zenith_south &lt;-SQM_south%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM.ZENITH)%&gt;%
+  mutate(REGION=&quot;South Shore&quot;)
+
+zenith_eemp &lt;-SQM_eemp%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM.ZENITH)%&gt;%
+  mutate(REGION=&quot;East End&quot;)</code></pre>
+<p>Combine the data sets and stack them together.</p>
+<pre class="r"><code>zenith_stx &lt;-rbind(zenith_west, zenith_north, zenith_south, zenith_eemp) 
+
+zenith_stx_clean &lt;- zenith_stx %&gt;%
+  mutate(
+    SQM.ZENITH = as.numeric(SQM.ZENITH),
+    LOCATION = trimws(LOCATION),
+    STANDARD.NAME = trimws(STANDARD.NAME))</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `SQM.ZENITH = as.numeric(SQM.ZENITH)`.
+## Caused by warning:
+## ! NAs introduced by coercion</code></pre>
+<p>Calculate zenith averages for each beach. Take the average of all the
+points for each site.</p>
+<pre class="r"><code>stx_zenith_analysis &lt;-zenith_stx_clean%&gt;%
+  group_by(LOCATION, REGION)%&gt;% 
+  summarise(points=max(POINTS),
+            zenith_avg=mean(SQM.ZENITH,na.rm=T),
+            zenith_median=median(SQM.ZENITH,na.rm=T),
+            zenith_min=min(SQM.ZENITH),
+            zenith_max=max(SQM.ZENITH),
+            zenith_range=zenith_max-zenith_min,
+            STANDARD.NAME=first(STANDARD.NAME))%&gt;%
+  ungroup()</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LOCATION&#39;. You can override using the `.groups`
+## argument.</code></pre>
+<p><strong>Top 10 Darkest Zenith Skies</strong></p>
+<pre class="r"><code>zenith_darkest &lt;-stx_zenith_analysis%&gt;%
+  slice_max(order_by=zenith_avg, n = 10) 
+
+write.csv(zenith_darkest,&quot;Zenith Darkest Beaches.csv&quot;)</code></pre>
+<p><strong>Top 10 Brightest Zenith Skies</strong></p>
+<pre class="r"><code>zenith_brightest &lt;-stx_zenith_analysis%&gt;%
+  slice_min(order_by=zenith_avg, n=10)
+
+write.csv(lw_brightest,&quot;Zenith Brightest Skies.csv&quot;)</code></pre>
+<p>Zenith Values for St. Croix</p>
+<pre class="r"><code>zenith_boxplot&lt;-stx_zenith_analysis%&gt;%
+  select(LOCATION, REGION, zenith_avg, zenith_median, zenith_min, zenith_max, zenith_range)</code></pre>
+<p>Zenith Plot for St. Croix Beaches</p>
+<pre class="r"><code>ggplot(zenith_boxplot, aes(x = reorder(LOCATION, -zenith_avg), y = zenith_avg, color = LOCATION)) + 
+  geom_point(color = &quot;black&quot;, size = 3.5) +
+  theme_bw() +
+  ylim(0, 25) + 
+  labs(
+    x = &quot;Nesting Beaches&quot;,
+    y = &quot;Zenith Brightness (mag/arcsecs)&quot;
+  ) +
+  guides(fill = FALSE)+
+  theme(
+  axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color = &quot;black&quot;),
+axis.title.y = element_text(margin = margin(r = 10), color = &quot;black&quot;))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" alt="" width="672" /></p>
+<p>Cleveland Dot Plot for Zenith Averages (Different Style Plot)</p>
+<pre class="r"><code>ggplot(zenith_boxplot, aes(x = reorder(LOCATION, -zenith_avg), y = zenith_avg)) + 
+  geom_segment(
+    aes(xend = reorder(LOCATION, -zenith_avg), yend = 0), 
+    color = &quot;grey75&quot;,   
+    linewidth = 0.6     
+  ) +
+    geom_point(color = &quot;black&quot;, size = 3.5) +
+  theme_bw() +
+  ylim(0, 25) + 
+  labs(
+    x = &quot;Sea Turtle Beaches&quot;,
+    y = &quot;Zenith Brightness (mag/arcsecs)&quot;
+  ) +
+  theme( 
+    axis.text = element_text(color = &quot;black&quot;),
+    axis.title = element_text(color = &quot;black&quot;),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color = &quot;black&quot;),
+    axis.title.y = element_text(margin = margin(r = 10), color = &quot;black&quot;),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" alt="" width="672" /></p>
+<p>Light Data for Seaward Horizon</p>
+<pre class="r"><code>seaward_west &lt;-SQM_west%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..SW.)%&gt;%
+  mutate(REGION=&quot;West End&quot;)
+
+seaward_north &lt;-SQM_north%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..SW.)%&gt;%
+  mutate(REGION=&quot;North Shore&quot;)
+
+seaward_south &lt;-SQM_south%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..SW.)%&gt;%
+  mutate(REGION=&quot;South Shore&quot;)
+
+seaward_eemp &lt;-SQM_eemp%&gt;%
+  select(STANDARD.NAME, LOCATION, POINTS, SQM..SW.)%&gt;%
+  mutate(REGION=&quot;East End&quot;)</code></pre>
+<p>Combine the data sets and stack them together.</p>
+<pre class="r"><code>seaward_stx &lt;-rbind(seaward_west, seaward_north, seaward_south, seaward_eemp)</code></pre>
+<p>Remove NA’s in the data set.</p>
+<pre class="r"><code>seaward_stx_clean&lt;-seaward_stx%&gt;%
+  filter(LOCATION!=&quot;&quot;)%&gt;% #removes NA&#39;s 
+  filter(SQM..SW.!=&quot;&quot;)%&gt;% #removes NA&#39;s 
+  mutate(LOCATION=as.factor(LOCATION),REGION=as.factor(REGION))
+
+seaward_stx_clean &lt;- seaward_stx %&gt;%
+  mutate(
+    SQM..SW. = as.numeric(SQM..SW.),
+    LOCATION = as.factor(trimws(LOCATION)),
+    STANDARD.NAME = trimws(STANDARD.NAME),
+    REGION = as.factor(trimws(REGION))) %&gt;%
+  drop_na(LOCATION, POINTS, SQM..SW., REGION)</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `SQM..SW. = as.numeric(SQM..SW.)`.
+## Caused by warning:
+## ! NAs introduced by coercion</code></pre>
+<pre class="r"><code>stx_seaward_analysis &lt;-seaward_stx_clean%&gt;%
+  group_by(LOCATION, REGION)%&gt;% #this will create one line per beach
+  summarise(points=max(POINTS),
+            seaward_avg=mean(SQM..SW.,na.rm=T),
+            seaward_median=median(SQM..SW.,na.rm=T),
+            seaward_min=min(SQM..SW.),
+            seaward_max=max(SQM..SW.),
+            seaward_range=seaward_max-seaward_min,
+  STANDARD.NAME=first(STANDARD.NAME))%&gt;%
+  ungroup()</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LOCATION&#39;. You can override using the `.groups`
+## argument.</code></pre>
+<pre class="r"><code>write.csv(stx_seaward_analysis,&quot;SQM SW List of Beaches .csv&quot;)</code></pre>
+<p>Top 10 Darkest Seaward Skies</p>
+<pre class="r"><code>seaward_darkest &lt;-stx_seaward_analysis%&gt;%
+  slice_max(order_by=seaward_avg, n = 10) 
+
+write.csv(seaward_darkest,&quot;Darkest Seaward Skies.csv&quot;)</code></pre>
+<p>Top 10 Brightest Seaward Skies</p>
+<pre class="r"><code>seaward_brightest &lt;-stx_seaward_analysis%&gt;%
+  slice_min(order_by=seaward_avg, n=10)
+
+write.csv(seaward_brightest,&quot;Brightest Seaward Skies.csv&quot;)</code></pre>
+<p>Seaward values for St. Croix</p>
+<pre class="r"><code>seaward_boxplot&lt;-stx_seaward_analysis%&gt;%
+  select(LOCATION, REGION, seaward_avg, seaward_median, seaward_min, seaward_max, seaward_range)</code></pre>
+<p>Cleveland Dot Plot - Seaward Averages</p>
+<pre class="r"><code>ggplot(seaward_boxplot, aes(x = reorder(LOCATION, -seaward_avg), y = seaward_avg, color = LOCATION)) + 
+  geom_segment(
+    aes(xend = reorder(LOCATION, -seaward_avg), yend = 0), 
+    color = &quot;grey75&quot;,   # Muted grey so it doesn&#39;t distract from the dots
+    linewidth = 0.6     # Clean, thin line weight
+  ) +
+  geom_point(color = &quot;black&quot;, size = 3.5) +
+  theme_bw() +
+  ylim(0, 25) + 
+  labs(
+    x = &quot;Sea Turtle Habitats&quot;,
+    y = &quot;Seaward Brightness (mag/arcsecs)&quot;
+  ) +
+  guides(fill = FALSE)+
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color = &quot;black&quot;),
+    axis.title.y = element_text(margin = margin(r = 10), color = &quot;black&quot;))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" alt="" width="672" /></p>
+<p>Combine Landward, Seaward and Zenith Averages to make a Scatter
+Plot</p>
+<pre class="r"><code>avg_landward &lt;-stx_lw_analysis%&gt;%
+  select(LOCATION,REGION,lw_avg)
+
+write.csv(avg_landward,&quot;LW Averages Across Beaches.csv&quot;)
+
+avg_seaward &lt;-stx_seaward_analysis%&gt;%
+  select(LOCATION,REGION, seaward_avg)
+
+avg_zenith &lt;-stx_zenith_analysis%&gt;%
+  select(LOCATION,REGION, zenith_avg)
+
+# Merge the average data sets together 
+
+combined_averages &lt;- avg_zenith %&gt;%
+  left_join(avg_seaward, by = c(&quot;LOCATION&quot;, &quot;REGION&quot;)) %&gt;%
+  left_join(avg_landward, by = c(&quot;LOCATION&quot;, &quot;REGION&quot;))
+
+
+write.csv(combined_averages,&quot;Clean SQM Data.csv&quot;)</code></pre>
+<p>Combine averages for landward, seaward and zenith in a plot. Reshape
+the data to long.</p>
+<pre class="r"><code>combined_long &lt;- combined_averages %&gt;%
+  pivot_longer(
+    cols = c(lw_avg, seaward_avg, zenith_avg), 
+    names_to = &quot;Measurement_Type&quot;, 
+    values_to = &quot;Brightness_Value&quot;)</code></pre>
+<p>Vertical Plot</p>
+<pre class="r"><code>ggplot(combined_long, aes(x = reorder(LOCATION, -Brightness_Value), y = Brightness_Value, color = Measurement_Type)) + 
+  geom_point(size = 4, alpha = 0.8) +
+  theme_bw() +
+  ylim(10, 25) + 
+  labs(
+    x = &quot;Sea Turtle Habitats&quot;,
+    y = &quot;Nighttime Sky Brightness (mag/arcsec²)&quot;,
+    color = &quot;Measurement Direction&quot;
+  ) +
+  scale_color_manual(
+    values = c(&quot;lw_avg&quot; = &quot;#E69F00&quot;, &quot;seaward_avg&quot; = &quot;#56B4E9&quot;, &quot;zenith_avg&quot; = &quot;#000000&quot;),
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)
+  ) + 
+  coord_flip() + # &lt;-- This flips the X and Y axes
+  theme(
+    axis.text.y = element_text(color = &quot;black&quot;, size = 8),
+    axis.title.x = element_text(margin = margin(t = 13)), 
+    legend.position = &quot;right&quot;)</code></pre>
+<pre><code>## Warning: Removed 7 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" alt="" width="672" /></p>
+<p>Combination for West End</p>
+<pre class="r"><code>sqm_averages_west &lt;-combined_averages%&gt;%
+  filter(REGION == &quot;West End&quot;)</code></pre>
+<p>Simple scatter plot for the West End</p>
+<pre class="r"><code>ggplot(sqm_averages_west, aes(x = LOCATION, y = lw_avg, color = LOCATION)) +
+  geom_point(size = 4, color=&quot;black&quot;) +
+  scale_color_viridis_d(option = &quot;viridis&quot;, direction=-1) + # clean Viridis color scheme
+  theme_bw() +
+  ylim(10, 25) + # I changed the SQM to 0-25 mag/arcsec2
+  labs(
+    x = &quot;West End&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color=&quot;black&quot;))</code></pre>
+<pre><code>## Warning: Removed 6 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" alt="" width="672" /></p>
+<p>Combine cardinal directions for Frederiksted’s Beaches</p>
+<pre class="r"><code>plot_data_west &lt;- sqm_averages_west %&gt;%
+  pivot_longer(
+    cols = c(lw_avg, seaward_avg, zenith_avg), 
+    names_to = &quot;Measurement_Type&quot;, 
+    values_to = &quot;Brightness&quot;)
+
+  ggplot(plot_data_west, aes(x = reorder(LOCATION, -Brightness), y = Brightness, fill = Measurement_Type)) + 
+  geom_point(shape = 21, color = &quot;black&quot;, size = 5, alpha = 0.8, stroke = 1.2) + 
+  scale_fill_manual(
+    values = c(
+      &quot;lw_avg&quot;      = &quot;#FFEA46&quot;,  # orange for landward
+      &quot;seaward_avg&quot; = &quot;#D55E00&quot;,  # blue for seaward
+      &quot;zenith_avg&quot;  = &quot;#00204D&quot;   # purple for zenith
+    ),
+    labels = c(&quot;Landward Horizon&quot;, &quot;Seaward Horizon&quot;, &quot;Zenith&quot;)
+  ) +
+  labs(
+    x = &quot;West End Habitats&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;,
+    fill = NULL  # Removes the legend title box header for a cleaner look
+  ) +
+  ylim(10, 25) +
+  theme_classic(base_size = 12) +
+  theme(
+    legend.position = &quot;top&quot;,
+    legend.direction = &quot;horizontal&quot;,
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.title.y = element_text(margin = margin(r = 12)))</code></pre>
+<pre><code>## Warning: Removed 6 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" alt="" width="672" /></p>
+<p>Brightness Scale for West End Beaches (Combination LW, SW and
+Zenith)</p>
+<pre class="r"><code>ggplot(plot_data_west, aes(x = LOCATION, y = Brightness, color = Brightness, shape=Measurement_Type)) +
+  geom_point(size = 5, alpha = 0.9) +
+  scale_color_viridis_c(name= &quot;Sky Brightness Units&quot;, option = &quot;viridis&quot;, direction = -1) + 
+  theme_bw() +
+  ylim(10, 25) + 
+  labs(
+    x = &quot;West End Beaches&quot;,
+    y = &quot;Brightness (mag/arcsecs)&quot;,
+    color = &quot;Brightness&quot;,
+    shape = &quot;Measurement Direction&quot;,
+  ) +
+  theme(
+    panel.background = element_rect(fill = &quot;white&quot;, color = NA),
+    legend.title = element_text(hjust = 0.5),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text.y = element_text(color = &quot;black&quot;),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color=&quot;black&quot;))</code></pre>
+<pre><code>## Warning: Removed 6 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" alt="" width="672" /></p>
+<p>Combine averages for North Shore</p>
+<pre class="r"><code>sqm_averages_north &lt;-combined_averages%&gt;%
+  filter(REGION == &quot;North Shore&quot;)</code></pre>
+<p>Combine cardinal directions for North Shore. Reshape the data to
+long.</p>
+<pre class="r"><code>plot_data_north &lt;- sqm_averages_north %&gt;%
+  pivot_longer(
+    cols = c(lw_avg, seaward_avg, zenith_avg), 
+    names_to = &quot;Measurement_Type&quot;, 
+    values_to = &quot;Brightness&quot;)</code></pre>
+<p>Scale for North Shore Beaches (Combination LW, SW and Zenith)</p>
+<pre class="r"><code>ggplot(plot_data_north, aes(x = reorder(LOCATION, -Brightness), y = Brightness, color = Measurement_Type, shape = Measurement_Type)) + 
+  geom_point(size = 4, alpha = 0.8) +
+  theme_bw() +
+  labs(
+    x = &quot;North Shore Beaches&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;,
+    color = &quot;Measurement Type&quot;,
+    shape = &quot;Measurement Type&quot;
+  ) +
+  # Using the colorblind-friendly palette 
+  scale_color_manual(
+    values = c(&quot;lw_avg&quot; = &quot;#E69F00&quot;, &quot;seaward_avg&quot; = &quot;#56B4E9&quot;, &quot;zenith_avg&quot; = &quot;#000000&quot;),
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)
+  ) + 
+  scale_shape_manual(
+    values = c(&quot;lw_avg&quot; = 16, &quot;seaward_avg&quot; = 17, &quot;zenith_avg&quot; = 15), # Circle, Triangle, Square
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)
+  ) +
+  theme(
+    panel.background = element_rect(fill = &quot;white&quot;, color = NA),
+    axis.text.y = element_text(color = &quot;black&quot;, size = 9),
+    axis.title.x = element_text(margin = margin(t = 15)),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color=&quot;black&quot;),
+    legend.position = &quot;right&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" alt="" width="672" /></p>
+<p>Brightness Scale for North Shore Beaches</p>
+<pre class="r"><code>ggplot(plot_data_north, aes(x = reorder(LOCATION, -Brightness), y = Brightness, color = Brightness, shape = Measurement_Type)) + 
+  geom_point(size = 5.5, alpha = 0.8) +
+  theme_bw() +
+  labs(
+    x = &quot;North Shore Beaches&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;,
+    color = &quot;Brightness&quot;,
+    shape = &quot;Measurement Direction&quot;) +
+  # Viridis continuous color scale
+  scale_color_viridis_c(name = &quot;Sky Brightness Units&quot;, option = &quot;viridis&quot;, direction= -1) +
+  scale_shape_manual(
+    values = c(&quot;lw_avg&quot; = 16, &quot;seaward_avg&quot; = 17, &quot;zenith_avg&quot; = 15),
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)) +
+theme(
+    panel.background = element_rect(fill = &quot;white&quot;, color = NA),
+    axis.text.y = element_text(color = &quot;black&quot;, size = 9),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color= &quot;black&quot;),
+    axis.title.x = element_text(margin = margin(t = 15)),
+    legend.title = element_text(hjust = 0.5),
+    legend.position = &quot;right&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" alt="" width="672" /></p>
+<p>Combine averages for South Shore</p>
+<pre class="r"><code>sqm_averages_south &lt;-combined_averages%&gt;%
+  filter(REGION == &quot;South Shore&quot;)</code></pre>
+<p>Combine cardinal directions for South Shore. Reshape the data to
+long.</p>
+<pre class="r"><code>plot_data_south &lt;- sqm_averages_south %&gt;%
+  pivot_longer(
+    cols = c(lw_avg, seaward_avg, zenith_avg), 
+    names_to = &quot;Measurement_Type&quot;, 
+    values_to = &quot;Brightness&quot;)</code></pre>
+<p>Brightness Scale for South Shore Beaches</p>
+<pre class="r"><code>ggplot(plot_data_south, aes(x = reorder(LOCATION, -Brightness), y = Brightness, color = Brightness, shape = Measurement_Type)) + 
+  geom_point(size = 5, alpha = 0.8) +
+  theme_bw() +
+  labs(
+    x = &quot;South Shore Beaches&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;,
+    color = &quot;Brightness&quot;,
+    shape = &quot;Measurement Direction&quot;) +
+  # Viridis continuous color scale
+  scale_color_viridis_c(name = &quot;Sky Brightness Units&quot;, option = &quot;viridis&quot;, direction= -1) +
+  scale_shape_manual(
+    values = c(&quot;lw_avg&quot; = 16, &quot;seaward_avg&quot; = 17, &quot;zenith_avg&quot; = 15),
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)) +
+  theme(
+    panel.background = element_rect(fill = &quot;white&quot;, color = NA),
+    axis.text.y = element_text(color = &quot;black&quot;, size = 9),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color= &quot;black&quot;),
+    axis.title.x = element_text(margin = margin(t = 15)),
+    legend.title = element_text(hjust = 0.5),
+    legend.position = &quot;right&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-36-1.png" alt="" width="672" /></p>
+<p>Brightness Scale for East End Marine Park</p>
+<p>Combine values</p>
+<pre class="r"><code>sqm_averages_eemp &lt;-combined_averages%&gt;%
+  filter(REGION == &quot;East End&quot;)</code></pre>
+<p>Combine all cardinal directions for the EEMP. Reshape the data to
+long.</p>
+<pre class="r"><code>plot_data_eemp &lt;- sqm_averages_eemp %&gt;%
+  pivot_longer(
+    cols = c(lw_avg, seaward_avg, zenith_avg), 
+    names_to = &quot;Measurement_Type&quot;, 
+    values_to = &quot;Brightness&quot;)
+
+ggplot(plot_data_eemp, aes(x = reorder(LOCATION, -Brightness), y = Brightness, color = Brightness, shape = Measurement_Type)) + 
+  geom_point(size = 5.5, alpha = 0.8) +
+  theme_bw() +
+  labs(
+    x = &quot;East End Marine Park&quot;,
+    y = &quot;Brightness (mag/arcsec²)&quot;,
+    color = &quot;Brightness&quot;,
+    shape = &quot;Measurement Direction&quot;) +
+  # Viridis continuous color scale
+  scale_color_viridis_c(name = &quot;Sky Brightness Units&quot;, option = &quot;viridis&quot;, direction= -1) +
+  scale_shape_manual(
+    values = c(&quot;lw_avg&quot; = 16, &quot;seaward_avg&quot; = 17, &quot;zenith_avg&quot; = 15),
+    labels = c(&quot;Landward Avg&quot;, &quot;Seaward Avg&quot;, &quot;Zenith Avg&quot;)) +
+  ylim(15,25)+
+  theme(
+    panel.background = element_rect(fill = &quot;white&quot;, color = NA),
+    axis.text.y = element_text(color = &quot;black&quot;, size = 9),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, color= &quot;black&quot;),
+    axis.title.x = element_text(margin = margin(t = 15)),
+    legend.title = element_text(hjust = 0.5),
+    legend.position = &quot;right&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-38-1.png" alt="" width="672" /></p>
+<p>Rearrange regions with code: West, North, South, East</p>
+<pre class="r"><code>stx_lw_analysis$REGION &lt;- factor(stx_lw_analysis$REGION, 
+                                 levels = c(&quot;West End&quot;, &quot;North Shore&quot;, &quot;South Shore&quot;, &quot;East End&quot;))</code></pre>
+<p><strong>STAR Disorientation Data</strong></p>
+<p>Create a data name.</p>
+<pre class="r"><code>stx_disorient &lt;- read.csv(&quot;Disorientation Data.csv&quot;)</code></pre>
+<p>Organize Property Types Across Years</p>
+<pre class="r"><code>property_type &lt;-stx_disorient%&gt;%
+  select(Year, Property.Type)%&gt;%
+  filter(Property.Type!=&quot;&quot;)</code></pre>
+<p>Organize Locations Across Years</p>
+<pre class="r"><code>location_reports &lt;-stx_disorient%&gt;%
+  select(Year, Location)%&gt;%
+  filter(Location!=&quot;&quot;)%&gt;%
+  drop_na()</code></pre>
+<p>Bar chart tallies property types across years Result: Nest
+disorientation occur more at DSPR and resorts.</p>
+<pre class="r"><code>ggplot(property_type, aes(x = as.factor(Year), fill = Property.Type)) +
+  geom_bar(position = &quot;dodge&quot;) +
+  scale_fill_brewer(palette = &quot;Set2&quot;) + #colorblind-safe colors
+  labs(
+    title = NULL,
+    x = NULL,
+    y = &quot;Number of Disorientation Reports&quot;,
+    fill = &quot;Development Type&quot;) +
+  theme_minimal() +
+  theme(
+    text = element_text(color = &quot;black&quot;),
+    axis.text = element_text(color = &quot;black&quot;),
+    axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-43-1.png" alt="" width="672" />
+Top 5 locations with the highest disorientation reports. Out of the 5
+Locations 4 of them are in the West-End</p>
 
 
 
