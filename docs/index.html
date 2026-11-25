@@ -870,8 +870,8 @@ disorientation occur more at DSPR and resorts.</p>
     axis.text = element_text(color = &quot;black&quot;),
     axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-43-1.png" alt="" width="672" /></p>
-<p>Top 5 locations with the highest disorientation reports.</p>
-<p>Out of the 5 Locations, 4 of them are in the West-End.</p>
+<p>Top 5 locations with the highest disorientation reports. Out of the 5
+Locations, 4 of them are in the West-End.</p>
 <pre class="r"><code>top_locations &lt;- stx_disorient %&gt;%
     mutate(Location = trimws(Location)) %&gt;%
     filter(!is.na(Location), Location != &quot;&quot;, Location != &quot;N/A&quot;) %&gt;%

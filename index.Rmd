@@ -706,7 +706,6 @@ ggplot(property_type, aes(x = as.factor(Year), fill = Property.Type)) +
 ```
 
 Top 5 locations with the highest disorientation reports.
-
 Out of the 5 Locations, 4 of them are in the West-End.
 
 ```{r}
