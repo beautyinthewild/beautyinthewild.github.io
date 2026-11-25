@@ -869,9 +869,169 @@ disorientation occur more at DSPR and resorts.</p>
     text = element_text(color = &quot;black&quot;),
     axis.text = element_text(color = &quot;black&quot;),
     axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-43-1.png" alt="" width="672" />
-Top 5 locations with the highest disorientation reports. Out of the 5
-Locations 4 of them are in the West-End</p>
+<p><img src="index_files/figure-html/unnamed-chunk-43-1.png" alt="" width="672" /></p>
+<p>Top 5 locations with the highest disorientation reports.</p>
+<p>Out of the 5 Locations, 4 of them are in the West-End.</p>
+<pre class="r"><code>top_locations &lt;- stx_disorient %&gt;%
+    mutate(Location = trimws(Location)) %&gt;%
+    filter(!is.na(Location), Location != &quot;&quot;, Location != &quot;N/A&quot;) %&gt;%
+    count(Location, sort = TRUE) %&gt;%
+    slice_max(n, n = 5)</code></pre>
+<pre class="r"><code>ggplot(top_locations, aes(x = reorder(Location, -n), y = n, fill = Location)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_viridis_d(option = &quot;D&quot;) + #color blind safe colors
+  labs(
+    title = NULL,
+    x = NULL,
+    y = &quot;Number of Disorientation Reports&quot;) +
+  theme_minimal() +
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+    axis.text = element_text(color = &quot;black&quot;))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" alt="" width="672" />
+Total Disoriented Hatchlings Across Years</p>
+<pre class="r"><code>sum_disoriented &lt;- stx_disorient %&gt;%
+  select(Year, Species, Disoriented, Alive) %&gt;%
+  filter(Species != &quot;&quot;, !is.na(Species)) %&gt;%
+  mutate(
+    Disoriented = as.numeric(Disoriented),
+    Alive = as.numeric(Alive)) %&gt;%
+  group_by(Year, Species) %&gt;%
+  summarise(
+    Total_Disoriented = sum(Disoriented, na.rm = TRUE),
+    Total_Alive = sum(Alive, na.rm = TRUE),
+    .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## Warning: There were 2 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `Disoriented = as.numeric(Disoriented)`.
+## Caused by warning:
+## ! NAs introduced by coercion
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</code></pre>
+<p>Bar Chart</p>
+<pre class="r"><code>sum_disoriented %&gt;%
+  pivot_longer(
+    cols = c(Total_Disoriented, Total_Alive),
+    names_to = &quot;Outcome&quot;,
+    values_to = &quot;Count&quot;)%&gt;%
+  ggplot(aes(x = as.factor(Year), y = Count, fill = Outcome)) +
+  geom_col(position = &quot;dodge&quot;) +
+  facet_wrap(~ Species) +
+  scale_fill_brewer(
+    palette = &quot;Set2&quot;,
+    labels = c(&quot;Total_Alive&quot; = &quot;Found Alive&quot;, &quot;Total_Disoriented&quot; = &quot;Disoriented&quot;)) +
+  labs(
+    title = NULL,
+    x = NULL,
+    y = &quot;Total Affected Hatchlings&quot;,
+    fill = &quot;Hatchling Outcome&quot;) +
+  theme_minimal() +
+  theme(
+    text = element_text(color = &quot;black&quot;),
+    axis.text = element_text(color = &quot;black&quot;),
+    strip.text = element_text(color = &quot;black&quot;, face = &quot;bold&quot;),
+    axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-47-1.png" alt="" width="672" />
+Mortality Across Years for Hawksbill and Green Turtle Hatchlings</p>
+<pre class="r"><code>mortality_years &lt;- stx_disorient %&gt;%
+  select(Year, Species, Mortality, Disoriented) %&gt;%
+  drop_na(Year, Species, Mortality, Disoriented) %&gt;%
+  filter(Year != &quot;&quot;, Species != &quot;&quot;, Mortality != &quot;&quot;, Disoriented != &quot;&quot;)</code></pre>
+<p>Cleans up the NA’s and UNKs in the rows.</p>
+<pre class="r"><code>mortality_clean &lt;- stx_disorient %&gt;%
+  select(Year, Species, Mortality, Disoriented, Property.Type)%&gt;%
+  drop_na(Year, Species, Mortality, Disoriented, Property.Type)%&gt;%
+  filter(
+    Year != &quot;&quot;, Species != &quot;&quot;, Mortality != &quot;&quot;, Disoriented != &quot;&quot;,
+    if_all(c(Year, Species, Mortality, Disoriented), ~ !.x %in% c(&quot;UNK&quot;, &quot;N/A&quot;)))%&gt;%
+  mutate(Mortality=as.numeric(Mortality), Disoriented=as.numeric(Disoriented),Species=as.factor(Species),Prop=case_when(Property.Type%in% c(&quot;Hotel&quot;, &quot;Resort&quot;)~&quot;Tourism&quot;,TRUE~&quot;Other&quot;))</code></pre>
+<p>Line of best fit - I think I should remove this!</p>
+<pre class="r"><code>ggplot(mortality_clean,aes(x=Disoriented, y=Mortality, color=Species))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-50-1.png" alt="" width="672" />
+Facet Wrap</p>
+<pre class="r"><code>ggplot(mortality_clean,aes(x=Disoriented, y=Mortality, color=Species))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;)+
+  facet_wrap(~Property.Type)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning in qt((1 - level)/2, df): NaNs produced
+## Warning in qt((1 - level)/2, df): NaNs produced
+## Warning in qt((1 - level)/2, df): NaNs produced</code></pre>
+<pre><code>## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning -Inf
+## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning -Inf
+## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning -Inf</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-51-1.png" alt="" width="672" />
+New Variable</p>
+<pre class="r"><code>ggplot(mortality_clean,aes(x=Disoriented, y=Mortality, color=Species))+
+  geom_point()+
+  geom_smooth(method = &quot;lm&quot;)+
+  facet_wrap(~Prop)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-52-1.png" alt="" width="672" />
+Summarize total counts per year and species</p>
+<pre class="r"><code>dual_axis_data &lt;- mortality_clean %&gt;%
+  mutate(
+    Mortality = as.numeric(Mortality),
+    Disoriented = as.numeric(Disoriented)) %&gt;%
+  group_by(Year, Species) %&gt;%
+  summarise(
+    Total_Mortality = sum(Mortality, na.rm = TRUE),
+    Total_Disoriented = sum(Disoriented, na.rm = TRUE),
+    .groups = &quot;drop&quot;)</code></pre>
+<p>Define our scale multiplier factor</p>
+<pre class="r"><code>scale_factor &lt;- 3</code></pre>
+<p>Dual Y axis</p>
+<pre class="r"><code>ggplot(dual_axis_data, aes(x = as.factor(Year), group = Species, color = Species)) +
+  geom_point(aes(y = Total_Disoriented, shape = &quot;Disoriented&quot;), size = 4, alpha = 0.8) +
+  geom_line(aes(y = Total_Disoriented), linetype = &quot;dashed&quot;, alpha = 0.5) +
+  geom_point(aes(y = Total_Mortality * scale_factor, shape = &quot;Mortality&quot;), size = 4, alpha = 0.8) +
+  geom_line(aes(y = Total_Mortality * scale_factor), linetype = &quot;solid&quot;, alpha = 0.5) +
+  facet_wrap(~ Species) +
+  scale_y_continuous(
+    name = &quot;Total Disoriented Hatchlings&quot;,
+    sec.axis = sec_axis(~ . / scale_factor, name = &quot;Total Mortalities&quot;)) +
+  scale_color_manual(values = c(&quot;Cm&quot; = &quot;#009E73&quot;, &quot;Ei&quot; = &quot;#E69F00&quot;)) +
+  labs(
+    title = NULL,
+    x = NULL,
+    shape = &quot;Metric&quot;) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-55-1.png" alt="" width="672" />
+Dual Y axis</p>
+<pre class="r"><code>ggplot(dual_axis_data, aes(x = as.factor(Year), group = Species, color = Species)) +
+  geom_point(aes(y = Total_Disoriented, shape = &quot;Disoriented&quot;), size = 4, alpha = 0.8) +
+  geom_line(aes(y = Total_Disoriented), linetype = &quot;dashed&quot;, alpha = 0.5) +
+  geom_point(aes(y = Total_Mortality * scale_factor, shape = &quot;Mortality&quot;), size = 4, alpha = 0.8) +
+  geom_line(aes(y = Total_Mortality * scale_factor), linetype = &quot;solid&quot;, alpha = 0.5) +
+  facet_wrap(~ Species, scales = &quot;free_y&quot;) +
+  facetted_pos_scales(
+    y = list(
+      Species == &quot;Cm&quot; ~ scale_y_continuous(
+        name = &quot;Total Disoriented Hatchlings&quot;,
+        limits = c(0, 400),
+        breaks = seq(0, 400, by = 100),
+        sec.axis = sec_axis(~ . / scale_factor, name = &quot;Total Mortalities&quot;)),
+      Species == &quot;Ei&quot; ~ scale_y_continuous(
+        name = &quot;Total Disoriented Hatchlings&quot;,
+        limits = c(0, 1000),
+        breaks = seq(0, 1000, by = 250),
+        sec.axis = sec_axis(~ . / scale_factor, name = &quot;Total Mortalities&quot;)))) +
+  scale_color_manual(values = c(&quot;Cm&quot; = &quot;#009E73&quot;, &quot;Ei&quot; = &quot;#E69F00&quot;)) +
+  labs(
+    title = NULL,
+    x = NULL,
+    shape = &quot;Metric&quot;) +
+  theme_minimal() +
+theme(
+  strip.text = element_text(face = &quot;bold&quot;, size = 12),
+  axis.text = element_text(color = &quot;black&quot;),
+  legend.position = &quot;bottom&quot;,
+  panel.spacing = unit(2, &quot;lines&quot;))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-56-1.png" alt="" width="672" /></p>
 
 
 
