@@ -76,22 +76,26 @@ Combine the landward values from each data set, stack them together.
 lw_stx <-rbind(lw_west, lw_north, lw_south, lw_eemp) 
 
 lw_stx <-lw_stx%>%
-  filter(LOCATION!="") #removes blanks under location
+  filter(LOCATION!="")%>% #removes blanks under location
+  drop_na()
 ```
 
 Calculate SQM landward averages for each nesting beach. Take the average of all the points for each survey site.
 
 ```{r}
-stx_lw_analysis <-lw_stx%>%
-  group_by(LOCATION, REGION)%>%
-  summarise(points=max(POINTS),
-            lw_avg=mean(SQM..LW.,na.rm=T),
-            lw_median=median(SQM..LW.,na.rm=T),
-            lw_min=min(SQM..LW.),
-            lw_max=max(SQM..LW.),
-            lw_range=lw_max-lw_min, 
-            lw_se=std.error(SQM..LW.),
-            STANDARD.NAME=first(STANDARD.NAME))%>% #keeps the names the same
+stx_lw_analysis <- lw_stx %>%
+  mutate(SQM..LW. = as.numeric(SQM..LW.)) %>%
+  group_by(LOCATION, REGION) %>%
+  summarise(
+    points = max(POINTS, na.rm = TRUE),
+    lw_avg = mean(SQM..LW., na.rm = TRUE),
+    lw_median = median(SQM..LW., na.rm = TRUE),
+    lw_min = min(SQM..LW., na.rm = TRUE),
+    lw_max = max(SQM..LW., na.rm = TRUE),
+    lw_range = lw_max - lw_min,
+    lw_se = std.error(SQM..LW.),
+    STANDARD.NAME = first(STANDARD.NAME)
+  ) %>%
   ungroup()
 
 write.csv(stx_lw_analysis,"SQM LW List of Beaches .csv")
