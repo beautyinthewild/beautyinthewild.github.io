@@ -887,8 +887,8 @@ Locations, 4 of them are in the West-End.</p>
   theme_minimal() +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
     axis.text = element_text(color = &quot;black&quot;))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" alt="" width="672" />
-Total Disoriented Hatchlings Across Years</p>
+<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" alt="" width="672" /></p>
+<p>Total Disoriented Hatchlings Across Years</p>
 <pre class="r"><code>sum_disoriented &lt;- stx_disorient %&gt;%
   select(Year, Species, Disoriented, Alive) %&gt;%
   filter(Species != &quot;&quot;, !is.na(Species)) %&gt;%
