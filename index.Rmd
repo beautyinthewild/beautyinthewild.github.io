@@ -728,6 +728,7 @@ ggplot(top_locations, aes(x = reorder(Location, -n), y = n, fill = Location)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
     axis.text = element_text(color = "black"))
 ```
+
 Total Disoriented Hatchlings Across Years 
 ```{r}
 sum_disoriented <- stx_disorient %>%
