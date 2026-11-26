@@ -1,6 +1,6 @@
 name: "my-website"
 navbar:
-  title: "Beauty in the Wild"
+  title: "Home"
   left:
     - text: "Markdown"
       href: index.html
